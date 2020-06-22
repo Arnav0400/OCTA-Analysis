@@ -30,6 +30,13 @@ def remove_boundary(img, w):
     img = img[w//2:-w//2+1,w//2:-w//2+1]
     return img
 
+def circular_crop(img):
+    H, W = img.shape
+    mask = np.zeros((H,W), np.uint8)
+    mask = cv2.circle(mask,(H//2, W//2),H//2,(255,255,255),thickness=-1)
+    img = img*mask
+    return img
+
 def get_line_arrays(w, l, angle):
     window = (np.ones((w,w))*0).astype('uint8')
     mid_point = w//2
@@ -99,5 +106,6 @@ def segment(gray_image):
     img_segn = standardize(img_seg)
     img_knn = knn(img_segn)
     image = remove_small_objects((img_knn>=np.unique(img_knn)[1]).astype(bool), min_size=32, connectivity=0).astype(float)
-    final_img = skeletonize(image)
-    return final_img.astype(int)
+    final_img = skeletonize(image).astype(int)
+    final_img = circular_crop(final_img)
+    return final_img
