@@ -105,7 +105,7 @@ def segment(gray_image):
     img_seg = seg_img_multi(gray_image)
     img_segn = standardize(img_seg)
     img_knn = knn(img_segn)
-    image = remove_small_objects((img_knn>=np.unique(img_knn)[1]).astype(bool), min_size=32, connectivity=0).astype(float)
+    image = remove_small_objects((img_knn>=np.unique(img_knn)[1]).astype(bool), min_size=100, connectivity=0).astype(float)
     final_img = skeletonize(image).astype(int)
     final_img = circular_crop(final_img)
     return final_img
